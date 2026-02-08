@@ -1,0 +1,3 @@
+# This file is used internally by FFMPEG.
+file 'file:C:/Users/Arles Aguilar/Documents/Tareas Graficacion/Fourier/media/videos/Fourier/480p15/partial_movie_files/FourierSquare/1584795214_4090730385_1990995744.mp4'
+file 'file:C:/Users/Arles Aguilar/Documents/Tareas Graficacion/Fourier/media/videos/Fourier/480p15/partial_movie_files/FourierSquare/4072820271_1432596116_3141039970.mp4'
