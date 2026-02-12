@@ -10,7 +10,7 @@ SPR_W, SPR_H = 18, 24
 x_off = (W - SPR_W * P) // 2
 y_off = (H - SPR_H * P) // 2
 
-COLOR = False
+COLOR = True
 
 
 if COLOR:
