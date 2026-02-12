@@ -14,22 +14,22 @@ img2 = np.zeros((x, y), np.uint8)
 
 b, g, r = cv.split(img1)
 
-# Imágenes con solo 1 canal visible
+
 mr = cv.merge([img2, img2, r])  # Solo rojo
 mg = cv.merge([img2, g, img2])  # Solo verde
 mb = cv.merge([b, img2, img2])  # Solo azul
 
-# Imágenes reordenando canales
+
 nueva  = cv.merge([r, g, b])
 nueva2 = cv.merge([g, b, r])
 nueva3 = cv.merge([b, r, g])
 
-# Mostrar canales individuales
+
 cv.imshow('Solo ROJO (mr)', mr)
 cv.imshow('Solo VERDE (mg)', mg)
 cv.imshow('Solo AZUL (mb)', mb)
 
-# Mostrar reordenamientos
+
 cv.imshow('n1 (r,g,b)', nueva)
 cv.imshow('n2 (g,b,r)', nueva2)
 cv.imshow('n3 (b,r,g)', nueva3)
