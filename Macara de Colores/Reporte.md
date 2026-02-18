@@ -11,7 +11,7 @@
 El objetivo principal de esta práctica es aplicar el modelo de color HSV para segmentar objetos específicos en una imagen digital. Se busca analizar los resultados trabajando directamente sobre una máscara binaria, identificar y contar regiones conectadas (frutas) sin depender de validaciones visuales en la imagen original, y evaluar cómo el rango de color seleccionado impacta en la calidad de la segmentación.
 
 ## Material
-* **Imagen de entrada:** `frutas.png`
+* **Imagen de entrada:** (img/frutas.png)
 * **Software:** Python con librerías OpenCV y NumPy.
 * **Entorno:** Script de procesamiento para conversión HSV, operaciones morfológicas y etiquetado de regiones.
 
