@@ -66,7 +66,7 @@ Utilizando el análisis de componentes conectados sobre la máscara limpia, obtu
 
 **Resultados del análisis (Ejemplo con color Rojo):**
 
-* **Número total de frutas detectadas:** 3
+* **Número total de frutas detectadas:** 8
 * **Áreas aproximadas (en píxeles):**
     * Región 1: ~14,500 px
     * Región 2: ~15,200 px
@@ -82,9 +82,9 @@ Repetí el proceso para los tres colores principales solicitados. A continuació
 
 | Color | Número Detectado | Observaciones (Ruido y Dificultad) |
 | :--- | :---: | :--- |
-| **Rojo** | 3 | **Difícil.** El rojo en HSV atraviesa el ángulo 0, requiriendo combinar dos rangos distintos. Además, los brillos intensos (blancos) en la piel de la manzana crean huecos internos difíciles de cerrar. |
-| **Verde** | 5 | **Difícil.** Aunque el rango de color es único, el programa confundía las frutas verdes con las **hojas de la piña y los tallos** de las otras frutas, ya que comparten el mismo matiz. Esto generó mucho "ruido estructural" que no era simple polvo. |
-| **Amarillo** | 3 | **Medio/Fácil.** Fue el más manejable por descarte. Aunque se confunde ligeramente con el naranja, no tuvo problemas graves de brillos (como el rojo) ni interferencia de hojas (como el verde). |
+| **Rojo** | 8 | **Difícil.** El rojo en HSV atraviesa el ángulo 0, requiriendo combinar dos rangos distintos. Además, los brillos intensos (blancos) en la piel de la manzana crean huecos internos difíciles de cerrar. |
+| **Verde** | 21 | **Difícil.** Aunque el rango de color es único, el programa confundía las frutas verdes con las **hojas de la piña y los tallos** de las otras frutas, ya que comparten el mismo matiz. Esto generó mucho "ruido estructural" que no era simple polvo. |
+| **Amarillo** | 10 | **Medio/Fácil.** Fue el más manejable por descarte. Aunque se confunde ligeramente con el naranja, no tuvo problemas graves de brillos (como el rojo) ni interferencia de hojas (como el verde). |
 
 **Preguntas:**
 
