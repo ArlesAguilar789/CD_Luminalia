@@ -28,9 +28,9 @@ Para esta actividad, seleccioné el color **Rojo** para explorar los límites de
 
 | Etapa | Imagen |
 | :--- | :--- |
-| **Imagen Original** | ![Original](frutas.png) |
-| **Conversión a HSV** | ![HSV](Mascaracolor.png) |
-| **Máscara Binaria** | ![Mascara](Mascara.png) |
+| **Imagen Original** | ![Original](img/frutas.png) |
+| **Conversión a HSV** | ![HSV](img/Mascaracolor.png) |
+| **Máscara Binaria** | ![Mascara](img/Mascara.png) |
 
 **Reflexión:**
 
@@ -49,7 +49,7 @@ Antes de contar las frutas, analicé la calidad de la máscara binaria obtenida.
 
 | Máscara Cruda (Sin procesar) | Máscara Limpia (Morfología) |
 | :---: | :---: |
-| ![Ruido](Crudo.png) | ![Limpia](Mascara.png) |
+| ![Ruido](img/Crudo.png) | ![Limpia](img/Mascara.png) |
 
 **Análisis:**
 
@@ -78,22 +78,22 @@ Utilizando el análisis de componentes conectados sobre la máscara limpia, obtu
 
 ## Actividad 4: Comparación entre Colores
 
-Repetí el proceso para los tres colores principales solicitados. A continuación, presento la tabla comparativa.
+Repetí el proceso para los tres colores principales solicitados. A continuación, presento la tabla comparativa con las dificultades encontradas.
 
 | Color | Número Detectado | Observaciones (Ruido y Dificultad) |
 | :--- | :---: | :--- |
-| **Rojo** | 3 | **Difícil.** El rojo en HSV atraviesa el ángulo 0, por lo que tuve que combinar dos rangos (0-10 y 170-180). Además, presenta mucho ruido por los brillos intensos de las manzanas. |
-| **Verde** | 5 | **Fácil.** Fue el color más estable. El rango de verde (aprox. 35-85) está muy bien separado de los demás colores en el espectro, generando una máscara muy limpia. |
-| **Amarillo** | 3 | **Medio.** Se confunde fácilmente con el naranja si el rango es muy amplio. Requiere ajustar bien la Saturación para no detectar la piel de otras frutas. |
+| **Rojo** | 3 | **Difícil.** El rojo en HSV atraviesa el ángulo 0, requiriendo combinar dos rangos distintos. Además, los brillos intensos (blancos) en la piel de la manzana crean huecos internos difíciles de cerrar. |
+| **Verde** | 5 | **Difícil.** Aunque el rango de color es único, el programa confundía las frutas verdes con las **hojas de la piña y los tallos** de las otras frutas, ya que comparten el mismo matiz. Esto generó mucho "ruido estructural" que no era simple polvo. |
+| **Amarillo** | 3 | **Medio/Fácil.** Fue el más manejable por descarte. Aunque se confunde ligeramente con el naranja, no tuvo problemas graves de brillos (como el rojo) ni interferencia de hojas (como el verde). |
 
 **Preguntas:**
 
 1.  **¿Qué color fue más fácil segmentar?**
-    El **Verde**, debido a que su matiz es muy distinto al del fondo y al de las otras frutas, permitiendo un aislamiento casi perfecto con un solo rango continuo.
+    El **Amarillo**. Al comparar los tres, fue el que presentó menos conflictos externos. El rojo sufría por la iluminación (brillos) y el verde por la presencia de otros objetos naturales del mismo color (hojas y tallos), dejando al amarillo como el más estable para aislar.
 2.  **¿Cuál presentó más ruido?**
-    El **Rojo**. Las frutas rojas en la imagen tienen una superficie muy brillante que refleja la luz blanca; esto hace que esos píxeles tengan una saturación muy baja, creando agujeros en la máscara que el algoritmo interpreta como ruido si no se aplica morfología.
+    El **Verde**. A diferencia del ruido aleatorio (puntitos), el verde presentó ruido de objetos reales: las hojas y tallos. Este tipo de "ruido" es más difícil de eliminar porque son regiones grandes y conectadas, lo que obligó a ser muy estricto con el filtro de área mínima.
 3.  **¿Por qué?**
-    Porque el espacio HSV separa el color de la intensidad, pero los brillos especulares (blanco puro) carecen de información de color (Saturación cercana a 0), lo que confunde al segmentador basado estrictamente en el matiz.
+    Porque la segmentación por color HSV se basa únicamente en la crominancia. Para el algoritmo, una hoja verde y una pera verde son matemáticamente idénticas en el canal H (Matiz). Al no analizar formas ni texturas, el programa no puede distinguir entre "fruta" y "planta" si ambos tienen el mismo color.
 
 ---
 
@@ -109,14 +109,14 @@ La iluminación impacta directamente al canal V (Valor). Zonas muy iluminadas te
 Si dos frutas tienen valores de Matiz (H) similares y están físicamente en contacto, la máscara binaria las fusionará en una sola región blanca. El algoritmo de conteo las detectará como **un solo objeto** con un área grande, fallando en el conteo individual a menos que se apliquen algoritmos de separación más avanzados (como Watershed).
 
 **4. ¿Qué limitaciones tiene la segmentación por color?**
-La segmentación por color es ciega a la forma y textura. No puede distinguir entre una manzana roja y una pelota roja. Además, depende totalmente de la calidad de la luz; en condiciones de oscuridad extrema o sobreexposición, la información de color se pierde y el método falla.
+La segmentación por color es ciega a la forma y textura. Como vimos en el caso del verde, no puede distinguir entre una fruta y una hoja. Además, depende totalmente de la calidad de la luz; en condiciones de oscuridad extrema o sobreexposición, la información de color se pierde y el método falla.
 
 ---
 
 ## Conclusión Final
 
-La realización de esta práctica evidenció la superioridad del modelo de color HSV sobre el RGB para tareas de segmentación en visión computacional. A través de la experimentación con los diferentes canales, pude comprobar que aislar el componente de Matiz (Hue) permite identificar objetos de manera robusta, incluso cuando presentan variaciones de iluminación que en un modelo RGB habrían hecho imposible la detección mediante umbrales simples. Sin embargo, también aprendí que la segmentación por color no es perfecta: los brillos especulares en las frutas rojas demostraron que la luz blanca "destruye" la información de color, obligando a depender de técnicas de post-procesamiento.
+La realización de esta práctica evidenció la superioridad del modelo de color HSV sobre el RGB para tareas de segmentación, pero también dejó claras sus limitaciones. A través de la experimentación, comprobé que aislar el componente de Matiz (Hue) es efectivo, pero no infalible.
 
-Aquí es donde cobró vital importancia la **morfología matemática**. La Actividad 2 demostró que una máscara cruda es ruidosa e inutilizable para el conteo automático. La aplicación de operaciones de apertura y cierre no fue un paso estético, sino un requisito funcional para que el algoritmo `connectedComponents` pudiera entregar datos veraces. Sin esta limpieza, el sistema habría contado cientos de partículas de ruido como frutas.
+Los casos del **Rojo** y el **Verde** fueron particularmente ilustrativos. Con el rojo, aprendí que la luz blanca (brillos especulares) destruye la información de color, creando huecos en la detección. Con el verde, me enfrenté al problema de la **semántica de la imagen**: el algoritmo detectó exitosamente el color verde, pero fue incapaz de distinguir que parte de ese verde eran hojas y tallos, no frutas. Esto demuestra que el color por sí solo a menudo es insuficiente para una comprensión completa de la escena.
 
-Finalmente, el enfoque de trabajar únicamente sobre la máscara binaria y confiar en el análisis de regiones conectadas, en lugar de dibujar visualmente sobre la imagen, resalta la importancia de la abstracción de datos en ingeniería. Un sistema de visión artificial en una línea de producción real no "ve" la imagen como nosotros; "ve" matrices de ceros y unos. Comprender cómo manipular, limpiar y medir estas matrices es la base para desarrollar sistemas de inspección automatizada eficientes y precisos.
+Finalmente, el uso de la **morfología matemática** y el análisis de **regiones conectadas** fue la clave para mitigar estos errores. Sin la limpieza de ruido y el filtrado por área (para ignorar los tallos pequeños), el conteo habría sido totalmente erróneo. Esta práctica subraya que un sistema de visión artificial robusto no depende de un solo algoritmo mágico, sino de una cadena de procesos (Preprocesamiento -> Segmentación -> Limpieza -> Análisis) diseñada para compensar las debilidades de cada etapa individual.
