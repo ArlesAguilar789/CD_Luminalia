@@ -4,7 +4,6 @@ import math
 import os
 
 # --- CONFIGURACIÓN DE RUTAS ---
-# Usamos tu ruta específica. Recuerda usar barras dobles \\ o el prefijo r"" en Windows.
 base_path = r"C:\Users\Arles Aguilar\Documents\Tareas Graficacion\EXAMEN"
 
 print("Iniciando operaciones de Graficación Táctica...")
@@ -17,20 +16,14 @@ img1_path = os.path.join(base_path, 'm1_oscura.png')
 img1 = cv2.imread(img1_path, cv2.IMREAD_GRAYSCALE)
 
 if img1 is not None:
-    # --- MODO RAW ---
-    h, w = img1.shape
-    img1_raw = np.zeros((h, w), dtype=np.uint8)
-    for y in range(h):
-        for x in range(w):
-            # Se multiplica y se usa clip para no exceder 255
-            img1_raw[y, x] = np.clip(img1[y, x] * 50, 0, 255)
-    
     # --- MODO OPENCV ---
+    # Usamos cv2.multiply que maneja automáticamente el límite de 255 (saturación)
     img1_cv = cv2.multiply(img1, 50)
     
     cv2.imwrite(os.path.join(base_path, 'm1_recuperada.png'), img1_cv)
+    print("Misión 1 completada.")
 else:
-    print("Error: No se encontró m1_oscura.png")
+    print(f"Error: No se encontró la imagen en {img1_path}")
 
 # ==========================================
 # MISIÓN 2: El QR Fragmentado
@@ -43,25 +36,31 @@ mitad1 = cv2.imread(img2_1_path)
 mitad2 = cv2.imread(img2_2_path)
 
 if mitad1 is not None and mitad2 is not None:
-    # 1. Crear lienzo de 400x400 (3 canales)
-    lienzo_qr = np.zeros((400, 400, 3), dtype=np.uint8)
+    # 1. Crear lienzo blanco de 400x400 (3 canales)
+    lienzo_qr = np.ones((400, 400, 3), dtype=np.uint8) * 255
     
-    # 2. Trasladar mitad 1 al origen (0,0)
-    # Matriz de traslación identidad (tx=0, ty=0)
-    M1 = np.float32([[1, 0, 0], [0, 1, 0]])
-    res1 = cv2.warpAffine(mitad1, M1, (400, 400))
-    
-    # 3. Rotar mitad 2 180° y trasladarla a la parte inferior
+    # 2. Obtener dimensiones de las mitades
+    h1, w1 = mitad1.shape[:2]
     h2, w2 = mitad2.shape[:2]
-    # Matriz de rotación sobre su centro
-    M2 = cv2.getRotationMatrix2D((w2 // 2, h2 // 2), 180, 1.0)
-    # Como queremos que vaya abajo, desplazamos en el eje Y según el alto de la imagen
-    M2[1, 2] += (400 - h2) 
-    res2 = cv2.warpAffine(mitad2, M2, (400, 400))
+
+    # 3. Colocar la mitad 1 en la parte superior del lienzo
+    lienzo_res1 = np.ones((400, 400, 3), dtype=np.uint8) * 255
+    lienzo_res1[0:h1, 0:w1] = mitad1
     
-    # Unir ambas imágenes
-    qr_completo = cv2.bitwise_or(res1, res2)
+    # 4. Rotar mitad 2 180°
+    M_rot = cv2.getRotationMatrix2D((w2 / 2, h2 / 2), 180, 1.0)
+    mitad2_rotada = cv2.warpAffine(mitad2, M_rot, (w2, h2), borderValue=(255, 255, 255))
+    
+    # 5. Colocar la mitad 2 rotada en la parte inferior del lienzo
+    lienzo_res2 = np.ones((400, 400, 3), dtype=np.uint8) * 255
+    # Asumimos que la mitad 2 va en la mitad inferior (de la fila 200 a la 400)
+    lienzo_res2[400-h2:400, 0:w2] = mitad2_rotada
+    
+    # 6. Unir ambas imágenes usando AND (mantiene los trazos negros sobre fondo blanco)
+    qr_completo = cv2.bitwise_and(lienzo_res1, lienzo_res2)
+    
     cv2.imwrite(os.path.join(base_path, 'm2_qr_reparado.png'), qr_completo)
+    print("Misión 2 completada.")
 else:
     print("Error: No se encontraron las mitades del QR")
 
@@ -84,13 +83,14 @@ cv2.line(sello, (0, 0), (500, 500), (255, 255, 255), 2)
 cv2.line(sello, (500, 0), (0, 500), (255, 255, 255), 2)
 
 cv2.imwrite(os.path.join(base_path, 'm3_sello_forjado.png'), sello)
+print("Misión 3 completada.")
 
 # ==========================================
 # MISIÓN 4: La Frecuencia Térmica
 # ==========================================
 print("Ejecutando Misión 4...")
-# Nota: Tu archivo en la carpeta era .jpg, asegúrate de que el nombre coincida.
-img4_path = os.path.join(base_path, 'm4_ruido.jpg') 
+# Buscamos el archivo .png como aparecía en tu captura de GitHub
+img4_path = os.path.join(base_path, 'm4_ruido.png') 
 img4 = cv2.imread(img4_path)
 
 if img4 is not None:
@@ -103,8 +103,9 @@ if img4 is not None:
     mascara_cyan = cv2.inRange(hsv, lower_cyan, upper_cyan)
     
     cv2.imwrite(os.path.join(base_path, 'm4_clave_revelada.png'), mascara_cyan)
+    print("Misión 4 completada.")
 else:
-    print("Error: No se encontró m4_ruido.jpg")
+    print(f"Error: No se encontró la imagen en {img4_path}")
 
 # ==========================================
 # MISIÓN 5: La Antena Parabólica
@@ -126,5 +127,6 @@ while t <= 6.28:
     t += 0.01
 
 cv2.imwrite(os.path.join(base_path, 'm5_antena.png'), lienzo_antena)
+print("Misión 5 completada.")
 
-print("¡Todas las misiones completadas! Revisa la carpeta para ver los resultados.")
+print("\n¡Todas las misiones completadas! Revisa la carpeta EXAMEN para ver los resultados.")
