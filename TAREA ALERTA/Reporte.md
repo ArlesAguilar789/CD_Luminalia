@@ -6,9 +6,9 @@
 
 ### Misión 1
 - Imagen recuperada x50: 
-![Recuperada x50](m1_recuperado_x50.png)
+![Recuperada x50](ImagenesDeMision/m1_recuperado_x50.png)
 - Imagen recuperada x50 + 20: 
-![Recuperada x50 + 20](m1_recuperado_x50_mas20.png)
+![Recuperada x50 + 20](ImagenesDeMision/m1_recuperado_x50_mas20.png)
 - **Fragmento de Código Clave:**
 ```python
 # Modo Vectorizado para mayor eficiencia
@@ -18,7 +18,7 @@ img_mas20_vec = np.clip(img_x50_vec.astype(np.int32) + 20, 0, 255).astype(np.uin
 
 ### Misión 2
 - QR reconstruido: 
-![QR Reconstruido](m2_qr_reconstruido.png)
+![QR Reconstruido](ImagenesDeMision/m2_qr_reconstruido.png)
 - **Fragmento de Código Clave:**
 ```python
 # Rotación de la mitad 2 sobre su propio centro
@@ -33,7 +33,7 @@ lienzo = cv2.bitwise_and(mitad1_enderezada, mitad2_enderezada)
 
 ### Misión 3
 - Sello forjado: 
-![Sello Forjado](m3_sello_forjado_v2.png)
+![Sello Forjado](ImagenesDeMision/m3_sello_forjado_v2.png)
 - **Fragmento de Código Clave:**
 ```python
 # Colocación de los 8 círculos usando simetría polar (seno y coseno)
@@ -46,7 +46,7 @@ for i in range(8):
 
 ### Misión 4
 - Máscara Cyan: 
-![Máscara Cyan](m4_mask_cyan.png)
+![Máscara Cyan](ImagenesDeMision/m4_mask_cyan.png)
 - **Fragmento de Código Clave:**
 ```python
 # Suavizado previo para limpiar falsos positivos
@@ -60,9 +60,9 @@ mask = cv2.inRange(hsv, np.array([80, 100, 100]), np.array([100, 255, 255]))
 
 ### Misión 5
 - Evidencia tricolor: 
-![Evidencia Tricolor](m5_tricolor.png)
+![Evidencia Tricolor](ImagenesDeMision/m5_tricolor.png)
 - Mensaje recuperado: 
-![Mensaje Recuperado](m5_mensaje.png)
+![Mensaje Recuperado](ImagenesDeMision/m5_mensaje.png)
 - **Fragmento de Código Clave:**
 ```python
 # Separación de canales y recuperación por diferencia absoluta
