@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico Técnico - Caso de Éxito</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #00d2ff;
+            --secondary: #3a7bd5;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --accent: #f43f5e;
+            --success: #10b981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .presentation {
+            flex-grow: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            position: absolute;
+            width: 90%;
+            max-width: 1100px;
+            height: 80vh;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .slide.active { display: flex; flex-direction: column; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 { font-size: 3.5rem; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+        h2 { font-size: 2.2rem; color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 15px; }
+
+        /* Diapositiva 1 */
+        .hero-content { text-align: center; margin-top: 50px; }
+        .badge { background: var(--accent); padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: bold; margin-bottom: 20px; display: inline-block; }
+
+        /* Diapositiva 2 */
+        .water-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(180deg, transparent 0%, #3a7bd5 100%);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .phone-icon { position: absolute; left: 50%; top: 20px; transform: translateX(-50%); font-size: 80px; color: #cbd5e1; z-index: 2; }
+        .animate-fall { animation: fallIntoWater 2s forwards ease-in; }
+        @keyframes fallIntoWater {
+            0% { top: 20px; transform: translateX(-50%) rotate(0deg); }
+            30% { top: 130px; transform: translateX(-50%) rotate(15deg); }
+            50% { top: 160px; transform: translateX(-50%) rotate(-10deg); filter: drop-shadow(0 0 10px white); }
+            100% { top: 190px; transform: translateX(-50%) rotate(5deg); opacity: 0.7; }
+        }
+        .bubbles { position: absolute; bottom: 0; width: 100%; height: 100%; display: none; }
+        .bubble { position: absolute; background: rgba(255,255,255,0.3); border-radius: 50%; animation: rise 2s infinite; }
+        @keyframes rise { from { bottom: -10px; transform: translateX(0); } to { bottom: 100%; transform: translateX(20px); opacity: 0; } }
+
+        /* Diapositiva 3 */
+        .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 10px; }
+        .card { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px; cursor: pointer; transition: all 0.3s; border: 1px solid transparent; text-align: center; }
+        .card:hover { background: rgba(255,255,255,0.1); border-color: var(--primary); transform: translateY(-5px); }
+        .card i { font-size: 2.5rem; margin-bottom: 15px; color: var(--primary); }
+        .card p { font-size: 0.9rem; display: none; margin-top: 10px; color: #cbd5e1; }
+        .card.open p { display: block; animation: slideDown 0.3s forwards; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Diapositiva 4: El Porqué */
+        .chip-container { display: flex; align-items: center; gap: 40px; margin-top: 20px; background: rgba(0,0,0,0.2); padding: 30px; border-radius: 15px; }
+        .chip-text { flex: 2; font-size: 1.1rem; line-height: 1.8; }
+        .chip-visual { flex: 1; text-align: center; position: relative; }
+        .shield { position: absolute; top: -10px; right: 20px; font-size: 3rem; color: var(--success); filter: drop-shadow(0 0 10px var(--success)); }
+
+        /* Diapositiva 5: Procedimiento (Timeline) */
+        .timeline { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+        .step { background: rgba(255,255,255,0.05); padding: 15px 25px; border-radius: 12px; display: flex; align-items: center; gap: 20px; cursor: pointer; transition: 0.3s; border-left: 4px solid transparent; }
+        .step:hover { background: rgba(255,255,255,0.1); border-left-color: var(--primary); }
+        .step-num { background: var(--primary); color: var(--dark); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.3rem; flex-shrink: 0; box-shadow: 0 0 10px var(--primary); }
+        .step-content h3 { font-size: 1.2rem; color: var(--light); margin-bottom: 5px; }
+        .step-content p { display: none; font-size: 0.95rem; color: #cbd5e1; margin: 0; }
+        .step.active { border-left-color: var(--accent); background: rgba(244, 63, 94, 0.05); }
+        .step.active .step-num { background: var(--accent); color: white; box-shadow: 0 0 10px var(--accent); }
+        .step.active .step-content p { display: block; animation: slideDown 0.3s forwards; }
+
+        /* Controles */
+        .nav-bar { background: #1e293b; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); }
+        .btn { background: var(--secondary); color: white; border: none; padding: 12px 25px; border-radius: 12px; cursor: pointer; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 10px; }
+        .btn:hover:not(:disabled) { background: var(--primary); box-shadow: 0 0 15px var(--primary); }
+        .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .progress-dots { display: flex; gap: 10px; }
+        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.2); border-radius: 50%; transition: 0.3s; }
+        .dot.active { background: var(--primary); transform: scale(1.3); }
+    </style>
+</head>
+<body>
+
+<div class="presentation">
+    <div class="slide active">
+        <div class="hero-content">
+            <span class="badge">SOPORTE TÉCNICO AVANZADO</span>
+            <h1>Recuperación de Datos</h1>
+            <p style="font-size: 1.4rem; color: #94a3b8;">Análisis Forense: Dispositivo Dañado por Líquidos</p>
+            <div style="margin-top: 40px; font-size: 5rem; opacity: 0.2;">
+                <i class="fa-solid fa-microchip"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2><i class="fa-solid fa-droplet"></i> El Incidente</h2>
+        <p>Un estudiante derrama líquido sobre su dispositivo. El sistema de archivos queda inaccesible inmediatamente debido al apagado forzoso.</p>
+        
+        <div class="water-container">
+            <i class="fa-solid fa-mobile-screen-button phone-icon" id="phone"></i>
+            <div class="bubbles" id="bubbles">
+                <div class="bubble" style="left: 45%; width: 20px; height: 20px;"></div>
+                <div class="bubble" style="left: 55%; width: 15px; height: 15px; animation-delay: 0.5s;"></div>
+                <div class="bubble" style="left: 50%; width: 10px; height: 10px; animation-delay: 1s;"></div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="btn" onclick="simularCaida()" style="background: var(--accent); margin: 0 auto;">
+                <i class="fa-solid fa-play"></i> Simular Accidente
+            </button>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2><i class="fa-solid fa-magnifying-glass-chart"></i> Análisis de Daños</h2>
+        <p>Haz clic en cada área para descubrir qué falló realmente:</p>
+        
+        <div class="cards-grid">
+            <div class="card" onclick="this.classList.toggle('open')">
+                <i class="fa-solid fa-bolt"></i>
+                <h3>Cortocircuito</h3>
+                <p>El agua une contactos de energía con líneas de datos, quemando condensadores críticos de la placa base.</p>
+            </div>
+            <div class="card" onclick="this.classList.toggle('open')">
+                <i class="fa-solid fa-bacteria"></i>
+                <h3>Corrosión</h3>
+                <p>Oxidación galvánica que destruye las pistas de cobre y las soldaduras de estaño en cuestión de horas.</p>
+            </div>
+            <div class="card" onclick="this.classList.toggle('open')">
+                <i class="fa-solid fa-file-circle-exclamation"></i>
+                <h3>Daño Lógico</h3>
+                <p>El apagado repentino corrompe las tablas de partición del almacenamiento, haciendo invisibles los archivos.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2><i class="fa-solid fa-lightbulb"></i> ¿Por qué aún pueden recuperarse?</h2>
+        <p>Si la placa base está "muerta", ¿por qué el técnico dice que es posible recuperar las fotos?</p>
+        
+        <div class="chip-container">
+            <div class="chip-text">
+                <p>La esperanza reside en el <strong>Chip de Memoria (eMMC o UFS)</strong>. Aunque la tarjeta principal (PCB) sufra daños catastróficos, el chip donde se almacenan físicamente las fotos suele sobrevivir por dos razones:</p>
+                <ul style="margin-top: 15px; list-style: none; padding-left: 10px;">
+                    <li style="margin-bottom: 10px;"><i class="fa-solid fa-shield-halved" style="color: var(--success); margin-right: 10px;"></i> <strong>Sellado Epóxico (Underfill):</strong> En muchos dispositivos, el chip de memoria tiene una resina inyectada por debajo que evita que el agua toque sus conectores directos.</li>
+                    <li><i class="fa-solid fa-battery-half" style="color: var(--primary); margin-right: 10px;"></i> <strong>Tolerancia Eléctrica:</strong> Los chips de memoria no se queman a menos que reciban un pico de voltaje directo extremadamente alto.</li>
+                </ul>
+            </div>
+            <div class="chip-visual">
+                <i class="fa-solid fa-memory" style="font-size: 8rem; color: #94a3b8;"></i>
+                <i class="fa-solid fa-shield-halved shield"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2><i class="fa-solid fa-list-check"></i> Procedimiento de Recuperación</h2>
+        <p style="font-size: 1rem; color: #94a3b8; margin-bottom: 10px;">Haz clic en cada paso para ver el detalle de la intervención:</p>
+        
+        <div class="timeline">
+            <div class="step" onclick="this.classList.toggle('active')">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <h3>Limpieza y Desoxidación (Hardware)</h3>
+                    <p>Desmontaje total y baño químico de la placa base con alcohol isopropílico en una tina de ultrasonido para detener el avance de la corrosión.</p>
+                </div>
+            </div>
+            <div class="step" onclick="this.classList.toggle('active')">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <h3>Microsoldadura y Reflow (Hardware)</h3>
+                    <p>Uso de multímetro y esquemáticos para inyectar voltaje, encontrar líneas en cortocircuito y reemplazar los circuitos de administración de energía (PMIC).</p>
+                </div>
+            </div>
+            <div class="step" onclick="this.classList.toggle('active')">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                    <h3>Técnica "Chip-Off" (Plan B)</h3>
+                    <p>Si la placa es irreparable, se aplica calor extremo (aprox. 380°C) para desoldar el chip de memoria sano, se le hace reballing y se lee en un zócalo programador externo.</p>
+                </div>
+            </div>
+            <div class="step" onclick="this.classList.toggle('active')">
+                <div class="step-num">4</div>
+                <div class="step-content">
+                    <h3>Extracción Forense (Software)</h3>
+                    <p>Con acceso a la memoria, se utiliza software de *File Carving* para escanear el código binario en bruto, buscando las cabeceras (headers) de las imágenes JPG/PNG, ignorando el sistema de archivos dañado.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="nav-bar">
+    <button class="btn" id="prevBtn" onclick="move(-1)" disabled>
+        <i class="fa-solid fa-chevron-left"></i> Anterior
+    </button>
+    
+    <div class="progress-dots" id="dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+
+    <button class="btn" id="nextBtn" onclick="move(1)">
+        Siguiente <i class="fa-solid fa-chevron-right"></i>
+    </button>
+</div>
+
+<script>
+    let current = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function move(dir) {
+        slides[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        
+        current += dir;
+        
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
+        
+        prevBtn.disabled = current === 0;
+        nextBtn.disabled = current === slides.length - 1;
+    }
+
+    function simularCaida() {
+        const phone = document.getElementById('phone');
+        const bubbles = document.getElementById('bubbles');
+        
+        phone.classList.add('animate-fall');
+        
+        setTimeout(() => {
+            bubbles.style.display = 'block';
+        }, 800);
+
+        setTimeout(() => {
+            phone.classList.remove('animate-fall');
+            bubbles.style.display = 'none';
+        }, 4000);
+    }
+</script>
+
+</body>
+</html>

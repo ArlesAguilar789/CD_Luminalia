@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Arquitectura STRH-V1</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 800px; }
+        .header { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: bold; }
+        .grid { display: flex; gap: 20px; justify-content: space-between; text-align: center; }
+        .card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; flex: 1; display: flex; flex-direction: column; align-items: center; }
+        h3 { color: #64748b; font-size: 16px; margin-top: 0; }
+        .btn { background: #3b82f6; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin: 5px 0; font-weight: bold; width: 100%; transition: background 0.3s;}
+        .btn:hover { background: #2563eb; }
+        .btn:disabled { background: #94a3b8; cursor: not-allowed; }
+        .register { background: white; border: 1px solid #cbd5e1; padding: 10px; margin: 5px 0; border-radius: 5px; width: 90%; text-align: left; font-family: monospace;}
+        .value { color: #2563eb; font-weight: bold; font-size: 1.1em;}
+        .hardware-ring { width: 100px; height: 100px; border: 15px solid #2563eb; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-top: 20px; transition: all 0.1s;}
+        .vibrating { animation: shake 0.5s infinite; border-color: #ef4444; }
+        @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
+        #log { margin-top: 20px; background: #1e293b; color: #10b981; padding: 15px; border-radius: 8px; font-family: monospace; height: 100px; overflow-y: auto; font-size: 13px;}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <span>Simulador de Arquitectura STRH-V1</span>
+    </div>
+    
+    <div class="grid">
+        <div class="card">
+            <h3>CPU</h3>
+            <button class="btn" id="btn-leer" onclick="leerGesto()">Leer Gesto (0x01)</button>
+            <input type="range" id="slider-fuerza" min="0" max="100" value="85" style="width: 100%; margin: 15px 0;">
+            <button class="btn" id="btn-vibrar" onclick="enviarVibracion()">Enviar Vibración (0x02)</button>
+        </div>
+
+        <div class="card">
+            <h3>CONTROLADOR</h3>
+            <div class="register">Estado: <span class="value" id="reg-estado">0x01</span></div>
+            <div class="register">Orden: <span class="value" id="reg-orden">0x00</span></div>
+            <div class="register">Buf In: <span class="value" id="buf-in">X:0 Y:0 Z:0</span></div>
+            <div class="register">Buf Out: <span class="value" id="buf-out">0</span></div>
+        </div>
+
+        <div class="card">
+            <h3>HARDWARE</h3>
+            <div class="hardware-ring" id="hw-ring">
+                <div style="width: 20px; height: 20px; background: #2563eb; border-radius: 50%;" id="hw-core"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="log">Sistema iniciado. Hardware en IDLE.</div>
+</div>
+
+<script>
+    const regEstado = document.getElementById('reg-estado');
+    const regOrden = document.getElementById('reg-orden');
+    const bufIn = document.getElementById('buf-in');
+    const bufOut = document.getElementById('buf-out');
+    const logger = document.getElementById('log');
+    const hwRing = document.getElementById('hw-ring');
+    const hwCore = document.getElementById('hw-core');
+    const sliderFuerza = document.getElementById('slider-fuerza');
+    const botones = document.querySelectorAll('.btn');
+
+    function logMessage(msg) {
+        logger.innerHTML += `<br>> ${msg}`;
+        logger.scrollTop = logger.scrollHeight;
+    }
+
+    function toggleButtons(state) {
+        botones.forEach(btn => btn.disabled = !state);
+    }
+
+    function leerGesto() {
+        toggleButtons(false);
+        logMessage("[CPU] Iniciando lectura de gesto...");
+        regOrden.innerText = "0x01";
+        
+        setTimeout(() => {
+            regEstado.innerText = "0x00 (Ocupado)";
+            logMessage("[Hardware] Capturando trazos del giroscopio...");
+            
+            setTimeout(() => {
+                const x = Math.floor(Math.random() * 200);
+                const y = Math.floor(Math.random() * 200);
+                const z = Math.floor(Math.random() * 50);
+                
+                bufIn.innerText = `X:${x} Y:${y} Z:${z}`;
+                regEstado.innerText = "0x03 (Listo+Datos)";
+                logMessage("[Hardware] ¡Interrupción! Datos listos en buffer.");
+                
+                setTimeout(() => {
+                    logMessage(`[CPU] Gesto leído exitosamente: X=${x}, Y=${y}, Z=${z}`);
+                    regEstado.innerText = "0x01 (Listo)";
+                    regOrden.innerText = "0x00";
+                    toggleButtons(true);
+                }, 1000);
+            }, 1500);
+        }, 500);
+    }
+
+    function enviarVibracion() {
+        toggleButtons(false);
+        const fuerza = sliderFuerza.value;
+        logMessage("[CPU] Detectó colisión. Iniciando respuesta háptica...");
+        bufOut.innerText = fuerza;
+        regOrden.innerText = "0x02";
+
+        setTimeout(() => {
+            regEstado.innerText = "0x00 (Ocupado)";
+            logMessage(`[Hardware] Activando motor háptico al ${fuerza}% de potencia.`);
+            hwRing.classList.add('vibrating');
+            hwCore.style.background = '#ef4444';
+
+            setTimeout(() => {
+                hwRing.classList.remove('vibrating');
+                hwCore.style.background = '#2563eb';
+                regEstado.innerText = "0x01 (Listo)";
+                regOrden.innerText = "0x00";
+                logMessage("[CPU] Operación háptica completada.");
+                toggleButtons(true);
+            }, 2000); // Vibra por 2 segundos
+        }, 800);
+    }
+</script>
+
+</body>
+</html>
